@@ -14,7 +14,7 @@ void insert_rear(int q[],int item,int*r)
         count++;
     }
 }
-int delete_front (int q[],int*f,int*r)
+void delete_front (int q[],int*f,int*r)
 {
     int del_item;
     if (count==0)
@@ -26,7 +26,7 @@ int delete_front (int q[],int*f,int*r)
         del_item=q[*f];
         *f=((*f)++)%qsize;
         count--;
-        return del_item;
+        printf("item being deleted is %d\n",del_item);
     }
 }
 void display(int q[],int * f)
@@ -47,7 +47,7 @@ void main()
     int n,i;
     while(1)
 {
-    printf("choose from the following\n1.Insert\n2.Delete\n3.Display\n4.Exit\n");
+    printf("\nchoose from the following\n1.Insert\n2.Delete\n3.Display\n4.Exit\n");
     scanf("%d",&n);
     
     switch(n)
@@ -56,8 +56,7 @@ void main()
             scanf("%d",&item);
             insert_rear(q,item,&r);
              break;
-        case 2:i=delete_front(q,&f,&r);
-            printf("item being deleted is %d\n",i);
+        case 2:delete_front(q,&f,&r);
              break;
         case 3:display(q,&f);
              break;
