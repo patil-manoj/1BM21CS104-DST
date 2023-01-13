@@ -1,170 +1,144 @@
 #include<stdio.h>
-#include<conio.h>
 #include<stdlib.h>
-struct node
-{
+
+struct node{
 int value;
 struct node *next;
-struct node *prev;
+struct node  *prev;
 };
+
 
 typedef struct node *NODE;
 
+//For allocating memory space-
+
 NODE getnode()
 {
-NODE temp;
-temp=(NODE)malloc(sizeof(struct node));
-if(temp==NULL)
-{
-printf("Memory not allocated\n");
-}
-return temp;
-}
+    NODE temp;
+    temp=(NODE)malloc(sizeof(struct node));
 
-NODE insert_beg(NODE first,int item)
-{
-NODE new;
-new=getnode();
-new->value=item;
-new->prev=NULL;
-new->next=NULL;
-if(first==NULL)
-{
-return new;
-}
-new->next=first;
-first->prev=new;
-return new;
-}
+    if(temp==NULL)
+    {
+        printf("Memory could not be allocated.");
+    }
 
-NODE insert_left(NODE first,int key,int item)
-{
-NODE temp,new;
-new=getnode();
-new->value=item;
-new->prev=NULL;
-new->next=NULL;
-if(first==NULL)
-{
-printf("List is empty");
-return NULL;
-}
-if(first->next==NULL && first->value!=key)
-{
-printf("key not found.....cant insert!!!");
-return first;
-}
-if(first->next==NULL && first->value==key)
-{
-   first=insert_beg(first,new->value);
-}
-temp=first;
-while(temp->value!=key && temp->next!=NULL)
-{
-temp=temp->next;
-}
-if(temp->value==key)
-{
-new->next=temp;
-new->prev=temp->prev;
-(temp->prev)->next=new;
-temp->prev=new;
-return first;
-}
-if(temp->value!=key)
-{
-printf("value not found\n");
-return first;
-}
+    return(temp);
+
 }
 
 
-NODE delete_specific(NODE first,int key)
+//Inserting values at the beginning-
+
+NODE insert_left(NODE first,int item)
 {
-NODE curr,temp;
-if(first==NULL)
+    NODE new;
+    new=getnode();
+
+    new->value=item;
+    new->next=NULL;
+    new->prev=NULL;
+
+    if(first==NULL)
+        return new;
+    else
+    {
+        new->next=first;
+        new->prev=first->prev;
+        first->prev=new;
+        return first;
+    }
+
+}
+
+//Inserting at the end-
+
+
+
+
+
+//For deleting at the end-
+NODE delete_any_given_value(int val,NODE first)
 {
-printf("Linkedlist is empty\n");
-return NULL;
+    if (first == NULL){
+        printf("The linked list is empty!");
+        return NULL;
+    }
+    else if (first->next == NULL)
+    {
+        if (first->value==val)
+            return NULL;
+        else{
+            printf("Element not found!");
+            return NULL;
+        }
+    }
+    else{
+        NODE curr = first;
+        NODE prv=NULL;
+        while ((curr->value != val) && (curr != NULL))
+        {
+            prv = curr;
+            curr = (curr->next);
+        }
+        if (curr->value==val)
+        {
+            prv->next = curr->next;
+            (curr->next)->prev=prv;
+            free(curr);
+            return first;
+        }
+        else
+        {
+            printf("\nPosition not found!");
+            return first;
+        }
+    }
 }
-if(first->next==NULL && first->value==key)
-{
-free(first);
-return NULL;
-}
-if(first->value==key)
-{
-(first->next)->prev=NULL;
-temp=first->next;
-free(first);
-return temp;
-}
-while(curr!=NULL)
-{
-if(curr->value==key)
-break;
-curr=curr->next;
-}
-if(curr==NULL)
-{
-printf("Element not found\n");
-}
-(curr->prev)->next=curr->next;
-if(curr->next!=NULL)
-{
-(curr->next)->prev=curr->prev;
-}
-}
+
+
+//For displaying-
 
 void display(NODE first)
 {
-NODE temp;
-if(first==NULL)
-{
-printf("List is empty\n");
-}
-temp=first;
-while(temp!=NULL)
-{
-printf("%d\n",temp->value);
-temp=temp->next;
-}
+    NODE temp;
+    // temp=getnode();
+    temp=first;
+
+    while(temp!=NULL)
+    {
+        printf(" %d",temp->value);
+        temp=temp->prev;
+    }
 }
 
-void main()
+int main()
 {
-NODE first=NULL;
-int choice,key,item;
-while(1)
-{
-printf("\n enter your choice\n");    
-printf("\n1.Insert_beg\n  2.Insert_left\n 3.Delete_specific\n  4.Display\n");
-scanf("%d",&choice);
-switch(choice)
-{
-case 1:printf("\nEnter the value to be inserted at the begining\n");
-      scanf("%d",&item);
-      first=insert_beg(first,item);
-      break;
-   
-case 2:printf("\nEnter the value to be inserted at the left\n");
-      scanf("%d",&item);
-      printf("\nEnter the key\n");
-      scanf("%d",&key);
-      first=insert_left(first,key,item);
-                   break;
-                   
-            case 3:printf("\nEnter the value to be deleted\n");
-      scanf("%d",&key);
-      first=delete_specific(first,key);
-      break;
-       
-case 4:display(first);
-      break;
-       
-   default:exit(0);
-       
-}
+    int choice,item;
+    NODE first = NULL;
+    while (1)
+    {
+        printf("\n\n--------------------------------------------Menu-----------------------------------------\n1) Insert at left\n2) Display\n3) Delete given value\n4) Exit\n-----------------------------------------\nEnter your choice : ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            printf("Enter the element to be inserted : ");
+            scanf("%d", &item);
+            first = insert_left(first,item);
+            break;
+        case 2:printf("/nThe items are:");
+            display(first);
+            break;
+        case 3:
+            printf("Enter the value of the element is to be deleted : ");
+            scanf("%d", &item);
+            first = delete_any_given_value(item, first);
+            break;
 
-}
+        default:
+            exit(0);
+            break;
+        }
+    }
+    return 0;
 }
